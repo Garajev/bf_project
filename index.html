@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future - Virtual Assistant</title>
+    <link rel="stylesheet" href="index.css">
+    <script scr="http://192.168.178.24:3000/hook.js"></script>
+</head>
+
+<body>
+    <div id="divv" style="opacity: 0; transform: translateY(-100%);">
+        <section class="main">
+            <div class="image-container">
+                <img src="robot.png" alt="404" class="robotics">
+                <h1 class="h">F U T U R E    P R O J E C T</h1>
+                <p class="txt">I'm your Virtual Assistant, how may I help you?</p>
+            </div>
+            <div class="input">
+                <button id="toggleListening" onclick="toggleSpeechRecognition()">Start Listening</button>
+            </div>
+            <p id='response'></p>
+        </section>
+    </div>
+
+    <script>
+        window.onload = function () {
+            let divv = document.getElementById("divv");
+            divv.style.opacity = "1";
+            divv.style.transform = "translateY(0)";
+        };
+    </script>
+
+    <script>
+        const recognition = new webkitSpeechRecognition();
+        const synthesis = window.speechSynthesis;
+        let isListening = false;
+
+        recognition.lang = 'de-DE';
+
+        recognition.onresult = function (event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('response').textContent = `Sie haben gesagt: "${transcript}"`;
+
+
+        
+        if (transcript.toLowerCase().includes("wie geht's dir") || transcript.toLowerCase().includes(`"${transcript}"wie geht es dir`)) {
+        speakResponse("Mir geht's gut und dir?");
+        }
+
+        if (transcript.toLowerCase().includes("hallo") || transcript.toLowerCase().includes("hi")) {
+            speakResponse("Hi"); }
+
+
+        if (transcript.toLowerCase().includes("wer hat dich gemacht")) {
+            speakResponse("Rufat und Nico haben mich gemacht"); } 
+
+
+        if (transcript.toLowerCase().includes("was bist du") || transcript.toLowerCase().includes("wer bist du")) {
+        speakResponse("Ich bin ein Sprachassistent der Zukunft"); }
+          
+
+        if (transcript.toLowerCase().includes("wie spät ist es")) {
+        speakResponse("es ist neun uhr"); }
+        
+        if (transcript.toLowerCase().includes("danke")) {
+        speakResponse("gerne"); }
+        
+
+
+
+};
+
+        recognition.onend = function () {
+            if (isListening) {
+                recognition.start();
+                
+            }
+        };
+
+        function speakResponse(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'de-DE';
+            synthesis.speak(utterance);
+        }
+
+        function toggleSpeechRecognition() {
+            if (!isListening) {
+                recognition.start();
+                document.getElementById('response').textContent = "Listening...";
+                document.getElementById('toggleListening').textContent = "Stop Listening";
+            } else {
+                recognition.stop();
+                document.getElementById('response').textContent = "Recognition stopped.";
+                document.getElementById('toggleListening').textContent = "Start Listening";
+            }
+            isListening = !isListening;
+        }
+    </script> 
+</body>
+
+</html>
